@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'openid: ' + ${openid}"/>
+    <p th:text="'goodscode: ' + ${goodscode}"/>
+    <p th:text="'price: ' + ${price}"/>
+<h1>Form</h1>
+
+    <form action="#" th:action="@{/order}" th:object="${order}" method="post">
+        <p><input type="hidden" name="openid" th:value="${openid}"/></p>
+        <p><input type="hidden" name="goodscode" th:value="${goodscode}"/></p>
+        <p>count: <input type="text" th:field="*{count}" value="1" /></p>
+        <p><input type="hidden" name="price" th:value="${price}"/></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+    <select id="selectUserByID" parameterType="int" resultType="User">
+        SELECT * FROM `user` WHERE userid = #{id}
+    </select>
+
+    <insert id="insertUser" parameterType="com.yiran.ruozhuo.model.User">
+        <selectKey keyProperty="userid" order="AFTER" keyColumn="userid" resultType="int">
+            SELECT LAST_INSERT_ID() AS userid
+        </selectKey>
+        INSERT INTO user(openid, nickname, sex, city, province, country, headimgurl, privilege)
+        VALUES (#{openid}, #{nickname}, #{sex}, #{city}, #{province}, #{country}, #{headimgurl}, #{privilege})
+    </insert>
+
+    <select id="checkUserExists" parameterType="java.lang.String" resultType="int">
+        SELECT COUNT(1) AS count FROM `user` WHERE openid = #{openid}
+    </select>
+
+    <select id="selectGoodsPrice" resultType="int" parameterType="java.lang.String">
+        SELECT price FROM `goods` WHERE goodscode = #{goodscode}
+    </select>
+
+    <insert id="insertOrder" parameterType="com.yiran.ruozhuo.model.Order">
+        <selectKey keyProperty="orderid" order="AFTER" keyColumn="orderid" resultType="int">
+            SELECT LAST_INSERT_ID() AS orderid
+        </selectKey>
+        INSERT INTO `order`(openid, goodscode, count, price, totalcost) VALUES (#{openid}, #{goodscode}, #{count}, #{price}, #{totalcost})
+    </insert>
+
+</mapper>

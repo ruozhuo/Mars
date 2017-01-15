@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Detail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+    <body>
+        <h1>Detail</h1>
+            <p th:text="'openid: ' + ${order.openid}"/>
+            <p th:text="'goodscode: ' + ${order.goodscode}"/>
+            <p th:text="'count: ' + ${order.count}"/>
+            <p th:text="'price: ' + ${order.price}"/>
+            <p th:text="'总价: ' + ${order.totalcost}"/>
+            <a href="/pay">去支付</a>
+    </body>
+</html>
