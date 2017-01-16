@@ -36,7 +36,8 @@ public class PurcharseController {
         // 带着用户信息、商品id、数量跳转进入订单生成页面
         String encodedUrl = URLEncoder.encode(Const.REDIRECT_URI + "?goodscode=" + goodscode, "utf-8");
         System.out.println("-->>purchase.encodeUrl = " + encodedUrl);
-        String openUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + Const.APPID + "&redirect_uri=" + encodedUrl + "&response_type=code&scope=snsapi_base#wechat_redirect";
+        String openUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + Const.APPID
+                + "&redirect_uri=" + encodedUrl + "&response_type=code&scope=snsapi_base#wechat_redirect";
         response.sendRedirect(openUrl);
         return "nothing";
     }
