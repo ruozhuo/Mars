@@ -39,8 +39,10 @@ public class PayController {
     @RequestMapping(value = "/prepay", method = RequestMethod.POST)
     public String prepay(HttpServletRequest request, HttpServletResponse response,
                          @RequestParam(name = "prepay_id") String prepay_id,
-                         @RequestParam(name = "paySign") String paySign) {
+                         @RequestParam(name = "paySign") String paySign, Model model) {
 
+        model.addAttribute("prepay_id", prepay_id);
+        model.addAttribute("paySign", paySign);
 
         return "";
     }

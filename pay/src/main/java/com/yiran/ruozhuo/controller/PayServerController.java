@@ -37,7 +37,6 @@ public class PayServerController {
                                 @RequestParam(name = "limit_pay", required = false) String limit_pay,
                                 @RequestParam(name = "openid", required = false) String openid) {
 
-
         StringBuilder sb = new StringBuilder();
         String return_code_ = "";
         String return_msg_ = "";
