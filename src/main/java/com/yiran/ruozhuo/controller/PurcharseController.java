@@ -3,6 +3,7 @@ package com.yiran.ruozhuo.controller;
 import com.yiran.ruozhuo.model.Order;
 import com.yiran.ruozhuo.model.User;
 import com.yiran.ruozhuo.util.Const;
+import com.yiran.ruozhuo.util.HttpUtil;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -62,15 +63,16 @@ public class PurcharseController {
     public String orderDetail(HttpServletRequest request, @ModelAttribute Order order) {
         order.setTotalcost(order.getCount() * order.getPrice());
         System.out.println("-->>order.post.order = " + order);
-        insertOrder(order);
+//        insertOrder(order);
+
+        // 5.调用统一下单API()，生成预付订单
+
+        String xmlStr = HttpUtil.sendGet("");
+
+
+
         System.out.println("-->>order.post.orderid = " + order.getOrderid());
         return "orderdetail";
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/pay")
-    public String pay(HttpServletRequest request, HttpServletResponse response) {
-        return "pay";
     }
 
     private static SqlSessionFactory sqlSessionFactory;
@@ -92,13 +94,13 @@ public class PurcharseController {
         session.close();
         return price;
     }
-
-    private int insertOrder(Order order) {
-        SqlSession session = sqlSessionFactory.openSession();
-        session.insert("User.insertOrder", order);
-        session.commit();
-        session.close();
-        return order.getOrderid();
-    }
+//
+//    private int insertOrder(Order order) {
+//        SqlSession session = sqlSessionFactory.openSession();
+//        session.insert("User.insertOrder", order);
+//        session.commit();
+//        session.close();
+//        return order.getOrderid();
+//    }
 
 }
