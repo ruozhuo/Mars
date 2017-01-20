@@ -66,8 +66,9 @@ public class PurcharseController {
 //        insertOrder(order);
 
         // 5.调用统一下单API()，生成预付订单
+        String url = "http://pay.ittun.com";
 
-        String xmlStr = HttpUtil.sendGet("");
+        String xmlStr = HttpUtil.sendGet(url);
 
 
 

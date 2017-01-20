@@ -7,4 +7,5 @@ public class Const {
 
     public static final String KEY = "ruozhuo.pay.key";
 
+
 }

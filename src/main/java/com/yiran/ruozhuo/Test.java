@@ -1,5 +1,7 @@
 package com.yiran.ruozhuo;
 
+import com.yiran.ruozhuo.util.RandomUtil;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,7 +11,11 @@ import java.net.URLConnection;
  */
 public class Test {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        System.out.println(RandomUtil.getRandomNumber());
+    }
+
+    public void test() throws IOException {
         URL url = new URL("http://127.0.0.1:8080/sendXmlAndReturnXml.do");
         String xml = "<aaa><ddd>cccccc客户端请求的xml数据cccccccc</ddd></aaa>";
         URLConnection conn = null;
