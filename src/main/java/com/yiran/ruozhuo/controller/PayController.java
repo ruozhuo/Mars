@@ -2,7 +2,6 @@ package com.yiran.ruozhuo.controller;
 
 import com.yiran.ruozhuo.model.Order;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,6 @@ public class PayController {
     @RequestMapping(value = "/generateorder")
     private String generateOrder(HttpServletRequest request, HttpServletResponse response,
                                  @ModelAttribute Order order) {
-        insertOrder(order);
         return "";
     }
 
@@ -97,12 +95,5 @@ public class PayController {
         }
     }
 
-    private int insertOrder(Order order) {
-        SqlSession session = sqlSessionFactory.openSession();
-        session.insert("User.insertOrder", order);
-        session.commit();
-        session.close();
-        return order.getOrderid();
-    }
 
 }

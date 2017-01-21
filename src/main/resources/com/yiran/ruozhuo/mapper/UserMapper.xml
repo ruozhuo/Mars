@@ -19,15 +19,16 @@
         SELECT COUNT(1) AS count FROM `user` WHERE openid = #{openid}
     </select>
 
-    <select id="selectGoodsPrice" resultType="int" parameterType="java.lang.String">
-        SELECT price FROM `goods` WHERE goodscode = #{goodscode}
+    <select id="selectGoodsByGoodscode" resultType="com.yiran.ruozhuo.model.Goods" parameterType="java.lang.String">
+        SELECT goodsid, goodscode, count, price, catogory FROM `goods` WHERE goodscode = #{goodscode}
     </select>
 
     <insert id="insertOrder" parameterType="com.yiran.ruozhuo.model.Order">
         <selectKey keyProperty="orderid" order="AFTER" keyColumn="orderid" resultType="int">
             SELECT LAST_INSERT_ID() AS orderid
         </selectKey>
-        INSERT INTO `order`(openid, goodscode, count, price, totalcost) VALUES (#{openid}, #{goodscode}, #{count}, #{price}, #{totalcost})
+        INSERT INTO `order`(openid, goodscode, count, price, totalcost)
+        VALUES (#{openid}, #{goodscode}, #{count}, #{price}, #{totalcost})
     </insert>
 
 </mapper>

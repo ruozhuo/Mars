@@ -1,9 +1,13 @@
 package com.yiran.ruozhuo.controller;
 
+import com.yiran.ruozhuo.model.Goods;
 import com.yiran.ruozhuo.model.Order;
+import com.yiran.ruozhuo.model.OrderExt;
 import com.yiran.ruozhuo.model.User;
+import com.yiran.ruozhuo.util.CommonUtil;
 import com.yiran.ruozhuo.util.Const;
 import com.yiran.ruozhuo.util.HttpUtil;
+import com.yiran.ruozhuo.util.RandomUtil;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -21,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,33 +51,71 @@ public class PurcharseController {
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     public String order(HttpServletRequest request, HttpServletResponse response, Model model) {
         Map<String, ?> map = RequestContextUtils.getInputFlashMap(request);
-        System.out.println("-->>order.get.map = " + map);
         User user = (User) map.get("user");
         String goodscode = (String) map.get("goodscode");
 
-        int price = selectGoodsPrice(goodscode);
+        Goods goods = selectGoodsByGoodscode(goodscode);
+        System.out.println("-->>order.get.goods = " + goods);
 
-        model.addAttribute("order", new Order());
+//        model.addAttribute("order", new Order());
+//        model.addAttribute("goodscode", goodscode);
+//        model.addAttribute("openid", user.getOpenid());
+//        model.addAttribute("price", goods.getPrice());
+//        model.addAttribute("catogory", goods.getCatogory());
+
+        model.addAttribute("orderExt", new OrderExt());
         model.addAttribute("goodscode", goodscode);
         model.addAttribute("openid", user.getOpenid());
-        model.addAttribute("price", price);
+        model.addAttribute("price", goods.getPrice());
+        model.addAttribute("catogory", goods.getCatogory());
         return "order";
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public String orderDetail(HttpServletRequest request, @ModelAttribute Order order) {
-        order.setTotalcost(order.getCount() * order.getPrice());
-        System.out.println("-->>order.post.order = " + order);
+    public String orderDetail(HttpServletRequest request, @ModelAttribute OrderExt orderExt) {
+        orderExt.setTotalcost(orderExt.getCount() * orderExt.getPrice());
+        System.out.println("-->>order.post.orderExt = " + orderExt);
 //        insertOrder(order);
+        Order order = new Order(orderExt.getOrderid(), orderExt.getOpenid(),
+                orderExt.getGoodscode(), orderExt.getCount(), orderExt.getPrice(),
+                orderExt.getCount(), orderExt.getCreatetime(), orderExt.getPaymentid());
+
+        //生成商户订单
+        insertOrder(order);
+
+        System.out.println("-->>order.id = " + order.getOrderid());
+
 
         // 5.调用统一下单API()，生成预付订单
-        String url = "http://pay.ittun.com";
+        String appid = Const.APPID;
+        String mch_id = Const.MCH_ID;
+        String device_info = Const.DEVICE_INFO;
+        String nonce_str = RandomUtil.getRandomNumber();
 
+        String body = Const.BRAND + "-" + orderExt.getCatogory();
+        String out_trade_no = order.getOpenid() + "-" + order.getOrderid() + "-" + System.currentTimeMillis();
+        String total_fee = String.valueOf(orderExt.getTotalcost());
+        String spbil_create_ip = CommonUtil.getIP(request);
+        String notify_url = Const.URL_PAY_CALLBACK;
+        String trade_type = Const.TRADE_TYPE;
+
+        Map<String, String> paramsMap = new HashMap<String, String>();
+        paramsMap.put("appid", appid);
+        paramsMap.put("mch_id", mch_id);
+        paramsMap.put("device_info", device_info);
+        paramsMap.put("nonce_str", nonce_str);
+        paramsMap.put("body", body);
+        paramsMap.put("out_trade_no", out_trade_no);
+        paramsMap.put("total_fee", total_fee);
+        paramsMap.put("spbill_create_ip", spbil_create_ip);
+        paramsMap.put("notify_url", notify_url);
+        paramsMap.put("trade_type", trade_type);
+
+        String sign = CommonUtil.getSign(paramsMap);
+        System.out.println("-->>order.post.sign = " + sign);
+
+        String url = "http://pay.ittun.com/pay/unifiedorder";
         String xmlStr = HttpUtil.sendGet(url);
-
-
-
-        System.out.println("-->>order.post.orderid = " + order.getOrderid());
         return "orderdetail";
     }
 
@@ -88,20 +131,22 @@ public class PurcharseController {
         }
     }
 
-    private int selectGoodsPrice(String goodscode) {
+    private Goods selectGoodsByGoodscode(String goodscode) {
         SqlSession session = sqlSessionFactory.openSession();
-        int price = session.selectOne("User.selectGoodsPrice", goodscode);
+        Goods goods = session.selectOne("User.selectGoodsByGoodscode", goodscode);
         session.commit();
         session.close();
-        return price;
+        return goods;
     }
-//
-//    private int insertOrder(Order order) {
-//        SqlSession session = sqlSessionFactory.openSession();
-//        session.insert("User.insertOrder", order);
-//        session.commit();
-//        session.close();
-//        return order.getOrderid();
-//    }
+
+    private int insertOrder(Order order) {
+        SqlSession session = sqlSessionFactory.openSession();
+        session.insert("User.insertOrder", order);
+        session.commit();
+        session.close();
+        return order.getOrderid();
+    }
+
+
 
 }

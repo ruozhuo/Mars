@@ -5,11 +5,20 @@
 </head>
     <body>
         <h1>Detail</h1>
-            <p th:text="'openid: ' + ${order.openid}"/>
-            <p th:text="'goodscode: ' + ${order.goodscode}"/>
-            <p th:text="'count: ' + ${order.count}"/>
-            <p th:text="'price: ' + ${order.price}"/>
-            <p th:text="'总价: ' + ${order.totalcost}"/>
-            <a href="/pay">去支付</a>
+            <!--<p th:text="'openid: ' + ${order.openid}"/>-->
+            <!--<p th:text="'goodscode: ' + ${order.goodscode}"/>-->
+            <!--<p th:text="'count: ' + ${order.count}"/>-->
+            <!--<p th:text="'price: ' + ${order.price}"/>-->
+            <!--<p th:text="'总价: ' + ${order.totalcost}"/>-->
+            <!--<a href="/pay">去支付</a>-->
+
+
+        <p th:text="'openid: ' + ${orderExt.openid}"/>
+        <p th:text="'goodscode: ' + ${orderExt.goodscode}"/>
+        <p th:text="'catogory: ' + ${orderExt.catogory}"/>
+        <p th:text="'count: ' + ${orderExt.count}"/>
+        <p th:text="'price: ' + ${orderExt.price}"/>
+        <p th:text="'总价: ' + ${orderExt.totalcost}"/>
+        <a href="/pay">去支付</a>
     </body>
 </html>

@@ -5,14 +5,29 @@ package com.yiran.ruozhuo.model;
  */
 public class Order {
 
-    private int orderid;
-    private String openid;
-    private String goodscode;
-    private int count;
-    private int price;
-    private int totalcost;
-    private String createtime;
-    private int paymentid;
+    int orderid;
+    String openid;
+    String goodscode;
+    int count;
+    int price;
+    int totalcost;
+    String createtime;
+    int paymentid;
+
+    public Order() {
+    }
+
+    public Order(int orderid, String openid, String goodscode, int count,
+                 int price, int totalcost, String createtime, int paymentid) {
+        this.orderid = orderid;
+        this.openid = openid;
+        this.goodscode = goodscode;
+        this.count = count;
+        this.price = price;
+        this.totalcost = totalcost;
+        this.createtime = createtime;
+        this.paymentid = paymentid;
+    }
 
     public int getOrderid() {
         return orderid;
