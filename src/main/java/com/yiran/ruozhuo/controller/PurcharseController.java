@@ -111,11 +111,13 @@ public class PurcharseController {
         paramsMap.put("notify_url", notify_url);
         paramsMap.put("trade_type", trade_type);
 
+        paramsMap.put("orderid", String.valueOf(order.getOrderid()));
+
         String sign = CommonUtil.getSign(paramsMap);
-        System.out.println("-->>order.post.sign = " + sign);
+        paramsMap.put("sign", sign);
 
         String url = "http://pay.ittun.com/pay/unifiedorder";
-        String xmlStr = HttpUtil.sendGet(url);
+        String xmlStr = HttpUtil.sendPost(url, paramsMap);
         return "orderdetail";
     }
 
@@ -146,7 +148,5 @@ public class PurcharseController {
         session.close();
         return order.getOrderid();
     }
-
-
 
 }

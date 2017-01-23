@@ -5,9 +5,9 @@
 <configuration>
     <properties resource="db.properties"/>
 
-    <typeAliases>
-        <typeAlias type="com.yiran.ruozhuo.model.User" alias="User"/>
-    </typeAliases>
+    <!--<typeAliases>-->
+        <!--<typeAlias type="com.yiran.ruozhuo.mapper.PayMapper" alias="Pay"/>-->
+    <!--</typeAliases>-->
 
     <environments default="development">
         <environment id="development">
@@ -22,6 +22,6 @@
     </environments>
 
     <mappers>
-        <mapper resource="com/yiran/ruozhuo/mapper/UserMapper.xml"/>
+        <mapper resource="com/yiran/ruozhuo/mapper/PayMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,8 +1,11 @@
-package com.yiran.ruozhuo.util;
+package com.yiran.ruozhuo.utils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.Reader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -12,7 +15,7 @@ import java.util.TreeSet;
 /**
  * Created by ruozhuo on 2017/1/21.
  */
-public class CommonUtil {
+public class Util {
 
     public static String getSign(Map<String, String> paramsMap) {
         if (paramsMap == null || paramsMap.size() == 0) {
@@ -23,7 +26,9 @@ public class CommonUtil {
         for (String key : keys) {
             sb.append("&").append(key).append("=").append(paramsMap.get(key));
         }
-        sb.append("&").append(Const.KEY);
+        String appid = paramsMap.get("appid");
+        String key = selectKeyByAppid(appid);
+        sb.append("&").append(key);
         sb.deleteCharAt(0);
         String sign = md5(sb.toString()).toUpperCase();
         return sign;
@@ -54,21 +59,10 @@ public class CommonUtil {
         return md5Str;
     }
 
-    public static String getIP(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
-            //多次反向代理后会有多个ip值，第一个ip才是真实ip
-            int index = ip.indexOf(",");
-            if (index != -1) {
-                ip = ip.substring(0, index);
-            }
-            return ip;
-        }
-        ip = request.getHeader("X-Real-IP");
-        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
-            return ip;
-        }
-        return request.getRemoteAddr();
+    public static Map<String, Object> xmlToMap(String xmlStr, String rootTag) throws Exception {
+        MySAXHandler handler = new MySAXHandler();
+        Map<String, Object> xmlMap = handler.getMap(xmlStr);
+        return xmlMap;
     }
 
     public static String mapToXml(Map<String, Object> paramsMap, String rootTag) {
@@ -90,6 +84,26 @@ public class CommonUtil {
         }
         xmlStr = stringBuilder.toString();
         return xmlStr;
+    }
+
+    private static SqlSessionFactory sqlSessionFactory;
+    private static Reader reader;
+
+    static {
+        try {
+            reader = Resources.getResourceAsReader("mybatis-config.xml");
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String selectKeyByAppid(String appid) {
+        SqlSession session = sqlSessionFactory.openSession();
+        String key = session.selectOne("Pay.selectKeyByAppid", appid);
+        session.commit();
+        session.close();
+        return key;
     }
 
 }

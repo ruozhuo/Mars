@@ -1,21 +1,28 @@
 package com.yiran.ruozhuo;
 
-import com.yiran.ruozhuo.util.RandomUtil;
-
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ruozhuo on 2017/1/16.
  */
 public class Test {
 
-    public static void main(String[] args) {
-        System.out.println(RandomUtil.getRandomNumber());
+    public static void main(String[] args) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "mitcc");
+        map.put("age", 29);
+        map.put("sex", "male");
+        map.put("city", "Shanghai");
+        String rootTag = "xml";
     }
 
-    public void test() throws IOException {
+
+
+    public static void test() throws IOException {
         URL url = new URL("http://127.0.0.1:8080/sendXmlAndReturnXml.do");
         String xml = "<aaa><ddd>cccccc客户端请求的xml数据cccccccc</ddd></aaa>";
         URLConnection conn = null;
@@ -41,5 +48,7 @@ public class Test {
         }
         System.out.println(sb.toString());
     }
+
+
 
 }
